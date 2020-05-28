@@ -13,7 +13,8 @@ import type {UniformValues, UniformLocations} from '../uniform_binding';
 import type RasterStyleLayer from '../../style/style_layer/raster_style_layer';
 
 export type RasterUniformsType = {|
-    'u_matrix': UniformMatrix4f,
+    'u_pos_matrix': UniformMatrix4f,
+    'u_texture_matrix': UniformMatrix4f,
     'u_tl_parent': Uniform2f,
     'u_scale_parent': Uniform1f,
     'u_buffer_scale': Uniform1f,
@@ -29,9 +30,10 @@ export type RasterUniformsType = {|
 |};
 
 const rasterUniforms = (context: Context, locations: UniformLocations): RasterUniformsType => ({
-    'u_matrix': new UniformMatrix4f(context, locations.u_matrix),
+    'u_pos_matrix': new UniformMatrix4f(context, locations.u_pos_matrix),
     'u_tl_parent': new Uniform2f(context, locations.u_tl_parent),
     'u_scale_parent': new Uniform1f(context, locations.u_scale_parent),
+    'u_texture_matrix': new UniformMatrix4f(context, locations.u_texture_matrix),
     'u_buffer_scale': new Uniform1f(context, locations.u_buffer_scale),
     'u_fade_t': new Uniform1f(context, locations.u_fade_t),
     'u_opacity': new Uniform1f(context, locations.u_opacity),
@@ -48,12 +50,14 @@ const rasterUniformValues = (
     matrix: Float32Array,
     parentTL: [number, number],
     parentScaleBy: number,
+    textureMatrix: Float32Array,
     fade: {mix: number, opacity: number},
     layer: RasterStyleLayer
 ): UniformValues<RasterUniformsType> => ({
-    'u_matrix': matrix,
+    'u_pos_matrix': matrix,
     'u_tl_parent': parentTL,
     'u_scale_parent': parentScaleBy,
+    'u_texture_matrix': textureMatrix,
     'u_buffer_scale': 1,
     'u_fade_t': fade.mix,
     'u_opacity': fade.opacity * layer.paint.get('raster-opacity'),

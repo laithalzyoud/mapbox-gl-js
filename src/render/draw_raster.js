@@ -8,6 +8,7 @@ import StencilMode from '../gl/stencil_mode';
 import DepthMode from '../gl/depth_mode';
 import CullFaceMode from '../gl/cull_face_mode';
 import {rasterUniformValues} from './program/raster_program';
+import {mat4} from 'gl-matrix';
 
 import type Painter from './painter';
 import type SourceCache from '../source/source_cache';
@@ -49,7 +50,7 @@ function drawRaster(painter: Painter, sourceCache: SourceCache, layer: RasterSty
             fade = getFadeValues(tile, parentTile, sourceCache, layer, painter.transform);
 
         let parentScaleBy, parentTL;
-
+        const textureMatrix = painter.transform.calculateTexMatrix(source);
         const textureFilter = layer.paint.get('raster-resampling') === 'nearest' ?  gl.NEAREST : gl.LINEAR;
 
         context.activeTexture.set(gl.TEXTURE0);
@@ -66,7 +67,7 @@ function drawRaster(painter: Painter, sourceCache: SourceCache, layer: RasterSty
             tile.texture.bind(textureFilter, gl.CLAMP_TO_EDGE, gl.LINEAR_MIPMAP_NEAREST);
         }
 
-        const uniformValues = rasterUniformValues(posMatrix, parentTL || [0, 0], parentScaleBy || 1, fade, layer);
+        const uniformValues = rasterUniformValues(posMatrix, parentTL || [0, 0], parentScaleBy || 1, textureMatrix, fade, layer);
 
         if (source instanceof ImageSource) {
             program.draw(context, gl.TRIANGLES, depthMode, StencilMode.disabled, colorMode, CullFaceMode.disabled,

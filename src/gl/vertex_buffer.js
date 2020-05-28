@@ -89,6 +89,9 @@ class VertexBuffer {
     setVertexAttribPointers(gl: WebGLRenderingContext, program: Program<*>, vertexOffset: ?number) {
         for (let j = 0; j < this.attributes.length; j++) {
             const member = this.attributes[j];
+            if (member.name === "a_texture_pos") {
+                console.log(member);
+            }
             const attribIndex: number | void = program.attributes[member.name];
 
             if (attribIndex !== undefined) {

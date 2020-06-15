@@ -240,7 +240,7 @@ class Program<Us: UniformBindings> {
                dynamicLayoutBuffer2
            );
            
-           gl.drawArrays(gl.TRIANGLES, 0, 6);
+           gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
        }
    }
 }

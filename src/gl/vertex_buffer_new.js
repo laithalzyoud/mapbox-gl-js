@@ -52,23 +52,15 @@ class VertexBufferNew {
         const gl = context.gl;
         this.buffer = gl.createBuffer();
         context.bindVertexBuffer.set(this.buffer);
-
-        const vertexData = [
-            // Front
-            .5, .5,  // bottom right 
-            0, .5, // top right
-            .5, 0, // bottom left
-            .5, .5, // bottom left
-        ];
+        console.log(array.arrayBuffer)
         //first two vertices second two textures
+        
         let buffers = [
-            9570, 3643, 1,  8192, 0, 8192       * 1, //top right
-            8105, 6155, 1,  8192, 8192, 8192    * 1, //bottom right
-            4547, 3643, 1,  0, 0, 8192    * 1, //top left
-            4547, 3643, 1,  0, 0, 8192    * 1, //top left
-            8105, 6155, 1,  8192, 8192, 8192    * 1, //bottom right
-            6012, 6155, 1,  0, 8192, 8192 * 1] //bottom left
-            
+            4368,  2135,  1,  8192  *   .95,              0,  8192  *   .95,  //top     right 
+            6346,  5765,  1,  8192  *  1.03,  8192  *  1.03,  8192  *  1.03,  //bottom  left  
+            2096,  3405,  1,              0,              0,  8192  *   .91,  //top     left  
+            3812,  6940,  1,              0,  8192  *   .98,  8192  *   .98,  //bottom  right 
+        ]
         const Int16buffers = new Int16Array(buffers)
         
         gl.bufferData(gl.ARRAY_BUFFER, Int16buffers, gl.STATIC_DRAW);

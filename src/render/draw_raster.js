@@ -70,6 +70,8 @@ function drawRaster(painter: Painter, sourceCache: SourceCache, layer: RasterSty
 
         if (source instanceof ImageSource) {
             const program = painter.useProgram('rasterimage');
+            console.log('posMatrix')
+            console.log(posMatrix)
             program.drawimage(context, gl.TRIANGLES, depthMode, StencilMode.disabled, colorMode, CullFaceMode.disabled,
                 uniformValues, layer.id, source.boundsBuffer,
                 painter.quadTriangleIndexBuffer, source.boundsSegments);

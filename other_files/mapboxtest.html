@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Mapbox GL JS Test</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="/home/vehbi/mapboxlaith/dist/mapbox-gl.js"></script>
+<link href="/home/vehbi/mapboxlaith/dist/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; };
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYXRsYXNtYXBnZW4iLCJhIjoiY2swbmxlN2M4MDB5ejNibWxjMXVvdGNvYSJ9.UsZbpfrkOq-cccfmnIzwPg';
+ 
+var map = new mapboxgl.Map({
+container: 'map',
+maxZoom: 21,
+minZoom: 1,
+zoom: 13,
+center: [26.765613555908203, 40.69659132697177],
+style: 'mapbox://styles/mapbox/satellite-v9',
+});
+
+map.on('load', function() {
+
+map.addSource("myImageSource", {
+"type": "image",
+"url": "http://localhost:5000/imstreams/getlocalimage?url=/home/vehbi/10-Textures/public/textures/uv-maptemplate.jpg",
+"coordinates": [
+                        
+                        [
+                            26.765613555908203, 
+                            40.69659132697177
+                        ], 
+                        [
+                            26.786835193634033, 
+                            40.667057219473136
+                        ], 
+                        [
+                            26.759648323059082, 
+                            40.65749447771087
+                        ], 
+                        [
+                            26.74123764038086, 
+                            40.68625994570193
+                        ]
+                ]
+})
+
+
+
+
+map.addLayer({
+"id": "overlay",
+"source": "myImageSource",
+"type": "raster"
+})
+})
+
+</script>
+ 
+</body>
+</html>

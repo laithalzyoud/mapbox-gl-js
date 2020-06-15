@@ -38,7 +38,6 @@ class RasterTileSource extends Evented implements Source {
     dispatcher: Dispatcher;
     map: Map;
     tiles: Array<string>;
-    rotation: number;
 
     _loaded: boolean;
     _options: RasterSourceSpecification | RasterDEMSourceSpecification;
@@ -57,7 +56,6 @@ class RasterTileSource extends Evented implements Source {
         this.scheme = 'xyz';
         this.tileSize = 512;
         this._loaded = false;
-        this.rotation = 0;
 
         this._options = extend({type: 'raster'}, options);
         extend(this, pick(options, ['url', 'scheme', 'tileSize']));

@@ -12,7 +12,7 @@ import type Context from '../../gl/context';
 import type {UniformValues, UniformLocations} from '../uniform_binding';
 import type RasterStyleLayer from '../../style/style_layer/raster_style_layer';
 
-export type RasterUniformsType = {|
+export type RasterimageUniformsType = {|
     'u_matrix': UniformMatrix4f,
     'u_tl_parent': Uniform2f,
     'u_scale_parent': Uniform1f,
@@ -28,7 +28,7 @@ export type RasterUniformsType = {|
     'u_spin_weights': Uniform3f
 |};
 
-const rasterUniforms = (context: Context, locations: UniformLocations): RasterUniformsType => ({
+const rasterimageUniforms = (context: Context, locations: UniformLocations): RasterimageUniformsType => ({
     'u_matrix': new UniformMatrix4f(context, locations.u_matrix),
     'u_tl_parent': new Uniform2f(context, locations.u_tl_parent),
     'u_scale_parent': new Uniform1f(context, locations.u_scale_parent),
@@ -44,13 +44,13 @@ const rasterUniforms = (context: Context, locations: UniformLocations): RasterUn
     'u_spin_weights': new Uniform3f(context, locations.u_spin_weights)
 });
 
-const rasterUniformValues = (
+const rasterimageUniformValues = (
     matrix: Float32Array,
     parentTL: [number, number],
     parentScaleBy: number,
     fade: {mix: number, opacity: number},
     layer: RasterStyleLayer
-): UniformValues<RasterzUniformsType> => ({
+): UniformValues<RasterimageUniformsType> => ({
     'u_matrix': matrix,
     'u_tl_parent': parentTL,
     'u_scale_parent': parentScaleBy,
@@ -89,4 +89,4 @@ function saturationFactor(saturation) {
         -saturation;
 }
 
-export {rasterUniforms, rasterUniformValues};
+export {rasterimageUniforms, rasterimageUniformValues};

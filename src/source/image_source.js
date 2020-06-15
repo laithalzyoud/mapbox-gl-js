@@ -71,8 +71,7 @@ class ImageSource extends Evented implements Source {
     maxzoom: number;
     tileSize: number;
     url: string;
-    rotation: number;
-    center: Array;
+
     coordinates: Coordinates;
     tiles: {[_: string]: Tile};
     options: any;
@@ -199,18 +198,13 @@ class ImageSource extends Evented implements Source {
         // tile.
         const tileCoords = cornerCoords.map((coord) => this.tileID.getTilePoint(coord)._round());
 
+        
         this._boundsArray = new RasterBoundsArray();
         this._boundsArray.emplaceBack(tileCoords[0].x, tileCoords[0].y, 0, 0);
         this._boundsArray.emplaceBack(tileCoords[1].x, tileCoords[1].y, EXTENT, 0);
         this._boundsArray.emplaceBack(tileCoords[3].x, tileCoords[3].y, 0, EXTENT);
         this._boundsArray.emplaceBack(tileCoords[2].x, tileCoords[2].y, EXTENT, EXTENT);
 
-        const reshapedCoords = [tileCoords[0].x, -tileCoords[0].y, tileCoords[1].x, -tileCoords[1].y,
-            tileCoords[2].x, -tileCoords[2].y, tileCoords[3].x, -tileCoords[3].y];
-        const rotationCenter = this.getRotation(reshapedCoords);
-        this.center = rotationCenter[0];
-        this.rotation = (Math.PI / 180) * rotationCenter[1];
-        console.log(rotationCenter);
 
         if (this.boundsBuffer) {
             this.boundsBuffer.destroy();
@@ -230,8 +224,7 @@ class ImageSource extends Evented implements Source {
         const gl = context.gl;
 
         if (!this.boundsBuffer) {
-            this.boundsBuffer = context.createVertexBuffer(this._boundsArray, rasterBoundsAttributes.members, true);
-            console.log(this.boundsBuffer.buffer);
+            this.boundsBuffer = context.createVertexBufferNew(this._boundsArray, rasterBoundsAttributes.members);
         }
 
         if (!this.boundsSegments) {
@@ -279,50 +272,6 @@ class ImageSource extends Evented implements Source {
 
     hasTransition() {
         return false;
-    }
-
-    /*  General case solution for a rectangle
- *
- *  Given coordinages of [x1, y1, x2, y2, x3, y3, x4, y4]
- *  where the corners are:
- *            top left    : x1, y1
- *            top right   : x2, y2
- *            bottom right: x3, y3
- *            bottom left : x4, y4
- *
- *  The centre is the average top left and bottom right coords:
- *  center: (x1 + x3) / 2 and (y1 + y3) / 2
- *
- *  Clockwise rotation: Math.atan((x1 - x4)/(y1 - y4)) with
- *  adjustment for the quadrant the angle is in.
- *
- *  Note that if using page coordinates, y is +ve down the page which
- *  is the reverse of the mathematic sense so y page coordinages
- *  should be multiplied by -1 before being given to the function.
- *  (e.g. a page y of 400 should be -400).
- */
-    getRotation(coords) {
-        // Get center as average of top left and bottom right
-        const center = [(coords[0] + coords[4]) / 2,
-            (coords[1] + coords[5]) / 2];
-
-        // Get differences top left minus bottom left
-        const diffs = [coords[0] - coords[6], coords[1] - coords[7]];
-
-        // Get rotation in degrees
-        let rotation = Math.atan(diffs[0] / diffs[1]) * 180 / Math.PI;
-
-        // Adjust for 2nd & 3rd quadrants, i.e. diff y is -ve.
-        if (diffs[1] < 0) {
-            rotation += 180;
-
-        // Adjust for 4th quadrant
-        // i.e. diff x is -ve, diff y is +ve
-        } else if (diffs[0] < 0) {
-            rotation += 360;
-        }
-        // return array of [[centerX, centerY], rotation];
-        return [center, rotation];
     }
 }
 

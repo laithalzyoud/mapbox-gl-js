@@ -436,6 +436,7 @@ class Map extends Camera {
         if (typeof window !== 'undefined') {
             window.addEventListener('online', this._onWindowOnline, false);
             window.addEventListener('resize', this._onWindowResize, false);
+            window.addEventListener('orientationchange', this._onWindowResize, false);
         }
 
         this.handlers = new HandlerManager(this, options);
@@ -1797,8 +1798,10 @@ class Map extends Camera {
      * @param {Object} [layer.metadata] (optional) Arbitrary properties useful to track with the layer, but do not influence rendering.
      * @param {string} [layer.renderingMode] This is only applicable for layers with the type `custom`.
      * See {@link CustomLayerInterface} for more information.
-     * @param {string} [beforeId] The ID of an existing layer to insert the new layer before.
-     * If this argument is not specified, the layer will be appended to the end of the layers array.
+     * @param {string} [beforeId] The ID of an existing layer to insert the new layer before,
+     * resulting in the new layer appearing visually beneath the existing layer.
+     * If this argument is not specified, the layer will be appended to the end of the layers array
+     * and appear visually above all other layers.
      *
      * @returns {Map} `this`
      *
@@ -2559,6 +2562,7 @@ class Map extends Camera {
         this.setStyle(null);
         if (typeof window !== 'undefined') {
             window.removeEventListener('resize', this._onWindowResize, false);
+            window.removeEventListener('orientationchange', this._onWindowResize, false);
             window.removeEventListener('online', this._onWindowOnline, false);
         }
 

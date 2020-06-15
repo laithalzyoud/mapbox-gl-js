@@ -13,7 +13,6 @@ import EdgeInsets from './edge_insets';
 
 import {UnwrappedTileID, OverscaledTileID, CanonicalTileID} from '../source/tile_id';
 import type {PaddingOptions} from './edge_insets';
-import ImageSource from '../source/image_source';
 
 /**
  * A single transform, generally used for a single tile to be
@@ -601,19 +600,6 @@ class Transform {
 
         cache[posMatrixKey] = new Float32Array(posMatrix);
         return cache[posMatrixKey];
-    }
-
-    calculateTexMatrix(source: Source): Float32Array {
-
-        console.log(source.rotation);
-        const texMatrix = mat4.identity(new Float64Array(16));
-        if (source instanceof ImageSource)
-            mat4.translate(texMatrix, texMatrix, [-source.center[0], -source.center[1], 0]);
-        mat4.rotateZ(texMatrix, texMatrix, source.rotation);
-        if (source instanceof ImageSource)
-            mat4.translate(texMatrix, texMatrix, [source.center[0], source.center[1], 0]);
-
-        return new Float32Array(texMatrix);
     }
 
     customLayerMatrix(): Array<number> {

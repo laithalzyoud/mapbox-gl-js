@@ -106,9 +106,8 @@ class Program<Us: UniformBindings> {
         gl.deleteShader(vertexShader);
         gl.deleteShader(fragmentShader);
 
-        const uniformsArray = Array.from(allUniformsInfo);
-        for (let it = 0; it < uniformsArray.length; it++) {
-            const uniform = uniformsArray[it];
+        for (let it = 0; it < allUniformsInfo.length; it++) {
+            const uniform = allUniformsInfo[it];
             if (uniform && !uniformLocations[uniform]) {
                 const uniformLocation = gl.getUniformLocation(this.program, uniform);
                 if (uniformLocation) {
@@ -178,12 +177,72 @@ class Program<Us: UniformBindings> {
             );
 
             gl.drawElements(
-                drawMode,
+                gl.TRIANGLES,
                 segment.primitiveLength * primitiveSize,
                 gl.UNSIGNED_SHORT,
                 segment.primitiveOffset * primitiveSize * 2);
         }
     }
+
+    drawimage(context: Context,
+        drawMode: DrawMode,
+        depthMode: $ReadOnly<DepthMode>,
+        stencilMode: $ReadOnly<StencilMode>,
+        colorMode: $ReadOnly<ColorMode>,
+        cullFaceMode: $ReadOnly<CullFaceMode>,
+        uniformValues: UniformValues<Us>,
+        layerID: string,
+        layoutVertexBuffer: VertexBuffer,
+        indexBuffer: IndexBuffer,
+        segments: SegmentVector,
+        currentProperties: any,
+        zoom: ?number,
+        configuration: ?ProgramConfiguration,
+        dynamicLayoutBuffer: ?VertexBuffer,
+        dynamicLayoutBuffer2: ?VertexBuffer) {
+
+       const gl = context.gl;
+
+       if (this.failedToCreate) return;
+
+       context.program.set(this.program);
+       context.setDepthMode(depthMode);
+       context.setStencilMode(stencilMode);
+       context.setColorMode(colorMode);
+       context.setCullFace(cullFaceMode);
+
+       for (const name in this.fixedUniforms) {
+           this.fixedUniforms[name].set(uniformValues[name]);
+       }
+
+       if (configuration) {
+           configuration.setUniforms(context, this.binderUniforms, currentProperties, {zoom: (zoom: any)});
+       }
+
+       const primitiveSize = {
+           [gl.LINES]: 2,
+           [gl.TRIANGLES]: 3,
+           [gl.LINE_STRIP]: 1
+       }[drawMode];
+
+       for (const segment of segments.get()) {
+           const vaos = segment.vaos || (segment.vaos = {});
+           const vao: VertexArrayObject = vaos[layerID] || (vaos[layerID] = new VertexArrayObject());
+
+           vao.bind(
+               context,
+               this,
+               layoutVertexBuffer,
+               configuration ? configuration.getPaintVertexBuffers() : [],
+               indexBuffer,
+               segment.vertexOffset,
+               dynamicLayoutBuffer,
+               dynamicLayoutBuffer2
+           );
+           
+           gl.drawArrays(gl.TRIANGLES, 0, 6);
+       }
+   }
 }
 
 export default Program;

@@ -176,7 +176,6 @@ class StructArray {
         if (n > this.capacity) {
             this.capacity = Math.max(n, Math.floor(this.capacity * RESIZE_MULTIPLIER), DEFAULT_CAPACITY);
             this.arrayBuffer = new ArrayBuffer(this.capacity * this.bytesPerElement);
-
             const oldUint8Array = this.uint8;
             this._refreshViews();
             if (oldUint8Array) this.uint8.set(oldUint8Array);

@@ -1,6 +1,7 @@
 // @flow
 import IndexBuffer from './index_buffer';
 
+import VertexBufferNew from './vertex_buffer_new';
 import VertexBuffer from './vertex_buffer';
 import Framebuffer from './framebuffer';
 import DepthMode from './depth_mode';
@@ -194,6 +195,10 @@ class Context {
         return new VertexBuffer(this, array, attributes, dynamicDraw);
     }
 
+    createVertexBufferNew(array: StructArray, attributes: $ReadOnlyArray<StructArrayMember>, dynamicDraw?: boolean) {
+        return new VertexBufferNew(this, array, attributes, dynamicDraw);
+    }
+    
     createRenderbuffer(storageFormat: number, width: number, height: number) {
         const gl = this.gl;
 
@@ -239,7 +244,7 @@ class Context {
 
         gl.clear(mask);
     }
-
+    
     setCullFace(cullFaceMode: $ReadOnly<CullFaceMode>) {
         if (cullFaceMode.enable === false) {
             this.cullFace.set(false);

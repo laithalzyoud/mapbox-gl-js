@@ -30,7 +30,7 @@ const AttributeType = {
  * Struct type is converted to a WebGL atribute.
  * @private
  */
-class VertexBuffer {
+class VertexBufferNew {
     length: number;
     attributes: $ReadOnlyArray<StructArrayMember>;
     itemSize: number;
@@ -52,7 +52,27 @@ class VertexBuffer {
         const gl = context.gl;
         this.buffer = gl.createBuffer();
         context.bindVertexBuffer.set(this.buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, array.arrayBuffer, this.dynamicDraw ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW);
+
+        const vertexData = [
+            // Front
+            .5, .5,  // bottom right 
+            0, .5, // top right
+            .5, 0, // bottom left
+            .5, .5, // bottom left
+        ];
+        //first two vertices second two textures
+        let buffers = [
+            9570, 3643, 1,  8192, 0, 8192       * 1, //top right
+            8105, 6155, 1,  8192, 8192, 8192    * 1, //bottom right
+            4547, 3643, 1,  0, 0, 8192    * 1, //top left
+            4547, 3643, 1,  0, 0, 8192    * 1, //top left
+            8105, 6155, 1,  8192, 8192, 8192    * 1, //bottom right
+            6012, 6155, 1,  0, 8192, 8192 * 1] //bottom left
+            
+        const Int16buffers = new Int16Array(buffers)
+        
+        gl.bufferData(gl.ARRAY_BUFFER, Int16buffers, gl.STATIC_DRAW);
+        
 
         if (!this.dynamicDraw) {
             delete array.arrayBuffer;
@@ -65,7 +85,7 @@ class VertexBuffer {
 
     updateData(array: StructArray) {
         assert(array.length === this.length);
-        const gl = this.context.gl;
+        const gl = this.context.gl
         this.bind();
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, array.arrayBuffer);
     }
@@ -90,14 +110,30 @@ class VertexBuffer {
         for (let j = 0; j < this.attributes.length; j++) {
             const member = this.attributes[j];
             const attribIndex: number | void = program.attributes[member.name];
+            let c = 0;
+            let itemsizee = 8
+            let memberofset = 0
+            if(this.attributes[j].name == "a_pos")
+            {
+                c = 3;
+                itemsizee = 12
+                memberofset = 0
+
+            }
+            else
+            {
+                c = 3;
+                itemsizee = 12
+                memberofset = 6
+            }
             if (attribIndex !== undefined) {
                 gl.vertexAttribPointer(
                     attribIndex,
-                    member.components,
+                    c,
                     (gl: any)[AttributeType[member.type]],
                     false,
-                    this.itemSize,
-                    member.offset + (this.itemSize * (vertexOffset || 0))
+                    itemsizee,
+                    memberofset
                 );
             }
         }
@@ -115,4 +151,4 @@ class VertexBuffer {
     }
 }
 
-export default VertexBuffer;
+export default VertexBufferNew;

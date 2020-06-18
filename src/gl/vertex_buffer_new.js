@@ -103,29 +103,10 @@ class VertexBufferNew {
             const row = [newVertex[i][0], newVertex[i][1], newVertex[i][2], newUV[i][0]*8192, newUV[i][1]*8192, newUV[i][2]*8192];
             buffers.push(row);
         }
-        // let buffers1 = [
-        //     array["int16"][0] ,  array["int16"][1] , 1,      0,      0,  1024,  //top     right  4837.061195 
-        //     array["int16"][4] ,  array["int16"][5] , 1,   1024,      0,  1024,  //bottom  right   4861.285838  
-        //     array["int16"][8] ,  array["int16"][9] , 1,      0,   1024,  1024,  //top     left   2602.860734  
-        //     array["int16"][8] ,  array["int16"][9] , 1,      0,   1024,  1024,  //top     left   2602.860734  
-        //     array["int16"][4] ,  array["int16"][5] , 1,   1024,      0,  1024,  //bottom  right   4861.285838  
-        //     array["int16"][12],  array["int16"][13], 1,   1024,   1024,  1024,  //bottom  left  2793.166841  
-        //     array["int16"][0] ,  array["int16"][1] , 1,      0,      0,  1024,  //top     right  4837.061195 
-        //     array["int16"][4] ,  array["int16"][5] , 1,   1024,      0,  1024,  //bottom  right   4861.285838  
-        //     array["int16"][8] ,  array["int16"][9] , 1,      0,   1024,  1024,  //top     left   2602.860734  
-        //     array["int16"][8] ,  array["int16"][9] , 1,      0,   1024,  1024,  //top     left   2602.860734  
-        //     array["int16"][4] ,  array["int16"][5] , 1,   1024,      0,  1024,  //bottom  right   4861.285838  
-        //     array["int16"][12],  array["int16"][13], 1,   1024,   1024,  1024,  //bottom  left  2793.166841  
 
-        // ]
         buffers = buffers.flat()
-        console.log(buffers)
 
         const Int16buffers = new Int16Array(buffers)
-        // const Int16buffers1 = new Int16Array(buffers1)
-
-        console.log(Int16buffers)
-        // console.log(Int16buffers1)
         
         gl.bufferData(gl.ARRAY_BUFFER, Int16buffers, gl.STATIC_DRAW);
         

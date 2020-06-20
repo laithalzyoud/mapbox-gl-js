@@ -12,11 +12,10 @@ import type Context from '../gl/context';
 
 import { generateMesh } from './triangulation';
 
-import { transform, transformInverse } from './pers';
+import { transform} from './pers';
 
 import { triangulate } from './del'
 
-import EXTENT from '../data/extent';
 
 /**
  * @enum {string} AttributeType
